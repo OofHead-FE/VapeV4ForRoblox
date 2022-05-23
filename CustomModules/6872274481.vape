@@ -6322,6 +6322,35 @@ runcode(function()
 end)
 
 runcode(function()
+	local disabler = world.CreateOptionsButton({
+		["Name"] = "Disabler",
+		["Function"] = function(callback)
+			if callback then
+				shared.disableractive = true
+				--createwarning("Disabler", "Disabling Anticheat..", 30)
+				while shared.disableractive == true do
+					wait(1)
+					if workspace.minicopter then
+						workspace.minicopter.Seat:Destroy()
+						wait(.5)
+						workspace.minicopter.Driver:Destroy()
+						return
+					else
+						shared.disableractive = false
+						print("Waiting for minicopter..")
+					end
+				end
+			else
+				shared.disableractive = false
+				UnbindFromStepped("disabler")
+				print("ok")
+			end
+		end,
+		["Default"] = false
+	})
+end)
+
+runcode(function()
 	GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
 		["Name"] = "HideBalloons", 
 		["Function"] = function(callback)
@@ -6378,7 +6407,7 @@ runcode(function()
 end)
 
 local Scaffold = {["Enabled"] = false}
-local flyvelo
+local velo
 GuiLibrary["RemoveObject"]("SpeedOptionsButton")
 runcode(function()
 	local speedmode = {["Value"] = "Normal"}
@@ -6413,7 +6442,8 @@ runcode(function()
 						if speedmode["Value"] == "CFrame" then
 							local newlongjumpvelo = longjumpvelo.Unit * math.clamp((Vector3.new(0, 0, 0) - longjumpvelo).magnitude - entity.character.Humanoid.WalkSpeed, 0, 100000000000)
 							newlongjumpvelo = newlongjumpvelo == newlongjumpvelo and newlongjumpvelo or Vector3.new(0, 0, 0)
-							local newpos = (longjump["Enabled"] and newlongjumpvelo or (entity.character.Humanoid.MoveDirection * (speedval["Value"] - entity.character.Humanoid.WalkSpeed))) * delta * (GuiLibrary["ObjectsThatCanBeSaved"]["FlyOptionsButton"]["Api"]["Enabled"] and 0 or 1)
+							local newpos = (longjump["Enabled"] and newlongjumpvelo or (entity.character.Humanoid.MoveDirection * (speedval["Value"] - entity.character.Humanoid.WalkSpeed))) * delta * (GuiLibrary["ObjectsThatCanBeSaved"]["
+							OptionsButton"]["Api"]["Enabled"] and 0 or 1)
 							local movevec = entity.character.Humanoid.MoveDirection.Unit * 20
 							movevec = movevec == movevec and movevec or Vector3.new(0, 0, 0)
 							local velocheck = not (longjump["Enabled"] and newlongjumpvelo == Vector3.new(0, 0, 0))
@@ -6626,11 +6656,6 @@ runcode(function()
 									end
 								end
 							end
-							if groundtime <= tick() and (not onground) then 
-								if fly["Enabled"] then 
-									fly["ToggleButton"](false)
-								end
-							end
 							lastonground = onground
 							allowed = 1
 							realflyspeed = realflyspeed + 14
@@ -6717,6 +6742,7 @@ runcode(function()
 				flyacprogressbar["Object"].Visible = callback
 			end
 		end,
+		["Default"] = true,
 		["HoverText"] = "Enables fly without balloons for 1.4s"
 	})
 	flyacboost = fly.CreateToggle({
