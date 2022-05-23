@@ -150,10 +150,10 @@ pcall(function()
 	whitelisted = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/whitelists/main/whitelist2.json", true))
 end)
 local AnticheatBypassNumbers = {
-	TPSpeed = 0.1,
-	TPCombat = 0.3,
-	TPLerp = 0.4,
-	TPCheck = 15
+	TPSpeed = 0.25,
+	TPCombat = 0.1,
+	TPLerp = 0.1,
+	TPCheck = 10
 }
 
 local function BindToRenderStep(name, num, func)
