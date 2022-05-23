@@ -6322,7 +6322,7 @@ runcode(function()
 end)
 
 runcode(function()
-	local disabler = world.CreateOptionsButton({
+	local disabler = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
 		["Name"] = "Disabler",
 		["Function"] = function(callback)
 			if callback then
